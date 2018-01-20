@@ -60,7 +60,7 @@ iters = 0
 
 if sys.argv[1] == "load":
     avgss = json.load(open('data.txt'))
-    iters = 11
+    iters = 50
 
 start = time.time()
 skip = 0
@@ -109,7 +109,7 @@ def clip(streamerid):
     keyboard.write("%s%d" % (streamers[streamerid], iters))
     keyboard.send(36) #enter
 
-    time.sleep(20)
+    time.sleep(10)
 
     #Save
     keyboard.press(55) #command
