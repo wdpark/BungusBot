@@ -105,27 +105,24 @@ def clip(streamerid):
     keyboard.release(7)
     time.sleep(15) #there may be some lag in internet speed
 
-    #Write a title for clip
-    keyboard.write("%s%d" % (streamers[streamerid], iters))
-    keyboard.send(36) #enter
-
-    time.sleep(25) #wait for clip to publish
-
     #Save
     keyboard.press(55) #command
     keyboard.press(1) #S
     keyboard.release(55)
     keyboard.release(1)
-    keyboard.send(36)
+    time.sleep(0.5)
 
-    time.sleep(5)
+    #Write title for clip in finder
+    keyboard.write("%s%d" % (streamers[streamerid], iters))
+    keyboard.send(36) #enter
+    time.sleep(2)
 
     #Close 2 tabs
     keyboard.press(55) #command
     keyboard.press(13) #W
     keyboard.release(55) #command
     keyboard.release(13) #W
-    
+
 
     f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], iters), 'r')
     text = f.read()
