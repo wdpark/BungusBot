@@ -98,18 +98,18 @@ def clip(streamerid):
     keyboard.send(36)
 
     #Get Clip
-    time.sleep(7)
+    time.sleep(10)
     keyboard.press(58) #alt
     keyboard.press(7) #X
     keyboard.release(58)
     keyboard.release(7)
-    time.sleep(12) #there may be some lag in internet speed
+    time.sleep(15) #there may be some lag in internet speed
 
     #Write a title for clip
     keyboard.write("%s%d" % (streamers[streamerid], iters))
     keyboard.send(36) #enter
 
-    time.sleep(20)
+    time.sleep(25) #wait for clip to publish
 
     #Save
     keyboard.press(55) #command
@@ -119,6 +119,13 @@ def clip(streamerid):
     keyboard.send(36)
 
     time.sleep(5)
+
+    #Close 2 tabs
+    keyboard.press(55) #command
+    keyboard.press(13) #W
+    keyboard.release(55) #command
+    keyboard.release(13) #W
+    
 
     f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], iters), 'r')
     text = f.read()
