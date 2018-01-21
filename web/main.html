@@ -101,10 +101,10 @@ new Twitch.Embed("twitch-embed", {
     <td align="center"><div id="wrapper"><button type="button" id="streamer4" class="button">clipperino</button></div></td>
 </tr>
 <tr>
-    <td>  <div id="p1"></div> <br><font color="white>"><span id="s1"></span></font> </td>
-    <td>  <br><font color="white>"><span id="s2"></span></font> </td>
-    <td>  <br><font color="white>"><span id="s3"></span></font> </td>
-    <td>  <br><font color="white>"><span id="s4"></span></font> </td>
+    <td>  <center><div id="p1"></div> <br><font color="#FFFFFF>"><span id="s1"></span></font> </td>
+    <td>  <center><div id="p2"></div> <br><font color="#FFFFFF>"><span id="s2"></span></font> </td>
+    <td>  <center><div id="p3"></div> <br><font color="#FFFFFF>"><span id="s3"></span></font> </td>
+    <td>  <center><div id="p4"></div> <br><font color="#FFFFFF>"><span id="s4"></span></font> </td>
   </tr>
 </table>
 
@@ -172,11 +172,22 @@ ws.onopen = function() {
 };
 ws.onmessage = function (evt) {
     obj = JSON.parse(evt.data);
-    console.log(obj)
-    $("#s1").html(obj[0])
-    $("#s2").html(obj[1])
-    $("#s3").html(obj[2])
-    $("#s4").html(obj[3])
+
+    var sum = obj[0].reduce(function(a, b) { return a + b; });
+    var avg = sum / obj[0].length;
+    $("#s1").html("average: " + avg + "<br> latest: " + obj[0][obj[0].length - 1])
+
+    sum = obj[1].reduce(function(a, b) { return a + b; });
+    avg = sum / obj[1].length;
+    $("#s2").html("average: " + avg + "<br> latest: " + obj[1][obj[1].length - 1])
+
+    sum = obj[2].reduce(function(a, b) { return a + b; });
+    avg = sum / obj[2].length;
+    $("#s3").html("average: " + avg + "<br> latest: " + obj[2][obj[2].length - 1])
+
+    sum = obj[3].reduce(function(a, b) { return a + b; });
+    avg = sum / obj[3].length;
+    $("#s4").html("average: " + avg + "<br> latest: " + obj[3][obj[3].length - 1])
 
     var trace = {
       x: Array.from({length: obj[0].length}, (x,i) => i),
@@ -185,10 +196,46 @@ ws.onmessage = function (evt) {
     };
     var data = [trace];
     var layout = {
-        width: 100,
-        height: 100
+        width: 400,
+        height: 400
     };
     Plotly.newPlot('p1', data, layout);
+
+    trace = {
+      x: Array.from({length: obj[1].length}, (x,i) => i),
+      y: obj[1],
+      type: 'scatter'
+    };
+    data = [trace];
+    layout = {
+        width: 400,
+        height: 400
+    };
+    Plotly.newPlot('p2', data, layout);
+
+    trace = {
+      x: Array.from({length: obj[2].length}, (x,i) => i),
+      y: obj[2],
+      type: 'scatter'
+    };
+    data = [trace];
+    layout = {
+        width: 400,
+        height: 400
+    };
+    Plotly.newPlot('p3', data, layout);
+
+    trace = {
+      x: Array.from({length: obj[3].length}, (x,i) => i),
+      y: obj[3],
+      type: 'scatter'
+    };
+    data = [trace];
+    layout = {
+        width: 400,
+        height: 400
+    };
+    Plotly.newPlot('p4', data, layout);
 };
 
 </script>
