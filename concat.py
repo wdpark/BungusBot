@@ -14,8 +14,8 @@ def concat_files(dir):
     for i in range(0,len(files)):
         file = files[i]
         chat = chats[i]
-        highlightVid = VideoFileClip(file).resize(width=980).subclip(40,60)
-        chatVid = VideoFileClip(chat).resize(width=300).subclip(40,60)
+        highlightVid = VideoFileClip(file).resize(width=980).subclip(40,59)
+        chatVid = VideoFileClip(chat).resize(width=300).subclip(0,19)
 
         highlightVid = highlightVid.set_fps(24)
         chatVid = chatVid.set_fps(24)
