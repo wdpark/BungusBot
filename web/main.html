@@ -13,15 +13,25 @@
 
 
   table {
-    top: 50px;
+    margin-left: 0;
+    top: 20px;
     width: 100%;
-    margin-top: 100px;
- }
+    margin-top: 10px;
+  }
 
+  td {
+    position: relative;
+    text-align: center;
+    padding: .1vw;
+  }
 
+  .twitch-div {
+    left: 6px;
+    margin: auto;
+  }
 
   #wrapper {
-    top: 50px;
+    margin-top: 50px;
   }
 
   button {
@@ -53,45 +63,50 @@
 <body>
   <div style="margin: left"><img src="bungusbotpicture.png" width="200" height="100"> </div>
 
-  <div id="twitch-embed"></div>
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-<script type="text/javascript">
-  new Twitch.Embed("twitch-embed", {
-    width: .24*window.screen.width,
-    height: 500,
-    channel: "imaqtpie"
-  });
-</script>
 
-<div id="twitch-embed"></div>
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-<script type="text/javascript">
-new Twitch.Embed("twitch-embed", {
-  width: .24*window.screen.width,
-  height: 500,
-  channel: "riotgames"
-});
-</script>
-
-<div id="twitch-embed"></div>
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-<script type="text/javascript">
-new Twitch.Embed("twitch-embed", {
-  width: .24*window.screen.width,
-  height: 500,
-  channel: "disguisedtoasths"
-});
-</script>
-
-<div id="twitch-embed"></div>
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-<script type="text/javascript">
-new Twitch.Embed("twitch-embed", {
-  width: .24*window.screen.width,
-  height: 500,
-  channel: "overwatchleague"
-});
-</script>
+<table>
+  <tr>
+    <td>
+      <div id="twitch-embed1" class="twitch-div"></div>
+      <script src="https://embed.twitch.tv/embed/v1.js"></script>
+      <script type="text/javascript">
+        new Twitch.Embed("twitch-embed1", {
+          width: .24*window.screen.width,
+          height: .6*window.screen.height,
+          channel: "imaqtpie"
+        });
+      </script>
+    </td><td>
+      <div id="twitch-embed2" class="twitch-div"></div>
+      <script src="https://embed.twitch.tv/embed/v1.js"></script>
+      <script type="text/javascript">
+      new Twitch.Embed("twitch-embed2", {
+        width: .24*window.screen.width,
+        height: .6*window.screen.height,
+        channel: "riotgames"
+      });
+      </script>
+    </td><td>
+      <div id="twitch-embed3" class="twitch-div"></div>
+      <script src="https://embed.twitch.tv/embed/v1.js"></script>
+      <script type="text/javascript">
+      new Twitch.Embed("twitch-embed3", {
+        width: .24*window.screen.width,
+        height: .6*window.screen.height,
+        channel: "disguisedtoasths"
+      });
+      </script>
+    </td><td>
+      <div id="twitch-embed4" class="twitch-div"></div>
+      <script src="https://embed.twitch.tv/embed/v1.js"></script>
+      <script type="text/javascript">
+      new Twitch.Embed("twitch-embed4", {
+        width: .24*window.screen.width,
+        height: .6*window.screen.height,
+        channel: "overwatchleague"
+      });
+      </script>
+    </td>
 
 <table>
   <tr>
@@ -99,7 +114,7 @@ new Twitch.Embed("twitch-embed", {
     <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>  
-</tr>
+  </tr>
 </table>
 
 </body>
