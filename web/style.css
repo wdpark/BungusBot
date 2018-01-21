@@ -1,0 +1,31 @@
+button {
+	position:relative;
+    top:0%;
+    left:0%;
+    bottom:58px;
+    font-weight: bold;
+    font-size: 1.2em
+/*  margin-top:2em;
+    margin-bottom:2em;*/
+    width: 100px;
+    background-color: #380060;
+    color: White;
+/*  padding: 8px 12px;
+    margin: 8px 620px;*/
+    border: 2px;
+    border-style: solid;
+    border-color: White
+    border-radius: 2px;
+}
+
+#addbutton button{
+	position: absolute;
+	left:50%;
+	padding: 40px 12px;
+    margin: 8px 620px;
+}
+
+.wrapper-holder {
+	position:absolute;
+	left: 50%;
+}
