@@ -110,10 +110,23 @@
 
 <table>
   <tr>
+<<<<<<< HEAD
     <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>  
+=======
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
+  </tr>
+  <tr>
+    <td>  <div id="p1"></div> <br><font color="white>"><span id="s1"></span></font> </td>
+    <td>  <br><font color="white>"><span id="s2"></span></font> </td>
+    <td>  <br><font color="white>"><span id="s3"></span></font> </td>
+    <td>  <br><font color="white>"><span id="s4"></span></font> </td>
+>>>>>>> 8435ac52aa56e9b61ff1d4687bde4211c549bbcd
   </tr>
 </table>
 
@@ -133,4 +146,70 @@ $("#streamer1").click(function(){
         }
     });
 });
+<<<<<<< HEAD
 </script>
+=======
+
+$("#streamer2").click(function(){
+    $.ajax({
+        url: '/clip2',
+        data: "nothing",
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(result){
+        }
+    });
+});
+
+
+$("#streamer3").click(function(){
+    $.ajax({
+        url: '/clip3',
+        data: "nothing",
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(result){
+        }
+    });
+});
+
+
+$("#streamer4").click(function(){
+    $.ajax({
+        url: '/clip4',
+        data: "nothing",
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(result){
+        }
+    });
+});
+
+
+console.log("websocket");
+var ws = new WebSocket("ws://localhost:8080/websocket");
+ws.onopen = function() {
+    // ws.send("Hello, world");
+};
+ws.onmessage = function (evt) {
+    obj = JSON.parse(evt.data);
+    console.log(obj)
+    $("#s1").html(obj[0])
+    $("#s2").html(obj[1])
+    $("#s3").html(obj[2])
+    $("#s4").html(obj[3])
+};
+
+var trace = {
+  x: list(range(len(obj[0])+1),
+  y: obj[0],
+  type: 'scatter'
+};
+var data = [trace];
+Plotly.newPlot('p1', data);
+
+</script>
+>>>>>>> 8435ac52aa56e9b61ff1d4687bde4211c549bbcd

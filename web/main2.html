@@ -1,0 +1,81 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>BungusBot</title>
+  <meta name="description" content="BungusBot">
+  <meta name="author" content="William,Donnel,Daniel,Kevin,Kevin">
+
+  <style>
+  body {background-color: #380060}
+
+  #wrapper {
+  position: absolute;
+  width: 350px;
+  height: 100px;
+  left: 8%
+
+button {
+  height: 50px;
+  width: 200px;
+}
+
+  </style>
+
+
+
+</head>
+
+<body>
+  <div style="margin: left"><img src="bungusbotpicture.png" width="200" height="100"> </div>
+
+<table style="width:100%">
+  <tr>
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1">clipperino</button></div>
+        <br><font color="white>"><span id="s1"></span></font>
+    </td>
+    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+        <br><font color="white>"><span id="s2"></span></font>
+    </td>
+    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+        <br><font color="white>"><span id="s3"></span></font>
+    </td>
+    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+        <br><font color="white>"><span id="s4"></span></font>
+    </td>
+</tr>
+</table>
+
+</body>
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.0/jquery.js"></script>
+<script>
+$("#streamer1").click(function(){
+    $.ajax({
+        url: '/clip1',
+        data: "nothing",
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(result){
+        }
+    });
+});
+
+console.log("websocket");
+var ws = new WebSocket("ws://localhost:8080/websocket");
+ws.onopen = function() {
+    // ws.send("Hello, world");
+};
+ws.onmessage = function (evt) {
+    obj = JSON.parse(evt.data);
+    console.log(obj)
+    $("#s1").html(obj[0])
+    $("#s2").html(obj[1])
+    $("#s3").html(obj[2])
+    $("#s4").html(obj[3])
+};
+</script>
