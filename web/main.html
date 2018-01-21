@@ -10,37 +10,16 @@
 
   <style>
   body {background-color: powderblue;}
-  h1   {color: blue;}
-  p    {color: red;}
 
-  #wrapper1 {
+  #wrapper {
   position: absolute;
   width: 350px;
   height: 100px;
   left: 8%
-}
-#wrapper2 {
-position: absolute;
-width: 350px;
-height: 100px;
-left: 33%
-}
-#wrapper3 {
-position: absolute;
-width: 350px;
-height: 100px;
-left: 57%
-}
-#wrapper4 {
-position: absolute;
-width: 350px;
-height: 100px;
-left: 83%
-}
 
 button {
-  height: 20px;
-  width: 100px;
+  height: 50px;
+  width: 200px;
 }
 
   </style>
@@ -50,6 +29,7 @@ button {
 </head>
 
 <body>
+  <div style="text-align: center"><img src="bungusbotpicture.png"></div>
 
   <div id="twitch-embed"></div>
 <script src="https://embed.twitch.tv/embed/v1.js"></script>
@@ -87,26 +67,19 @@ new Twitch.Embed("twitch-embed", {
 new Twitch.Embed("twitch-embed", {
   width: 350,
   height: 500,
-  channel: "moonmoon_ow"
+  channel: "overwatchleague"
 });
 </script>
 
+<table style="width:100%">
+  <tr>
+    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+</tr>
+</table>
 
-<div id="wrapper1">
-  <button type="button" id="streamer1">clipperino</button>
-</div>
-
-<div id="wrapper2">
-  <button type="button">clipperino</button>
-</div>
-
-<div id="wrapper3">
-  <button type="button">clipperino</button>
-</div>
-
-<div id="wrapper4">
-  <button type="button">clipperino</button>
-</div>
 
 
 </body>
