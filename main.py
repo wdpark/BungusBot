@@ -18,7 +18,7 @@ def send_static():
 @route('/clip1', method='POST')
 def do_uploadc():
     print("make the clip u booster")
-    clip(1)
+    clip(0)
     return "hehexd"
 
 def threadfunc():
@@ -43,6 +43,7 @@ streamers = ["riotgames"]
 sockets = []
 counts = []
 avgss = []
+chats = []
 for i in range(len(streamers)):
     # Connecting to Twitch IRC by passing credentials and joining a certain channel
     s = socket.socket()
@@ -60,7 +61,7 @@ iters = 0
 
 if sys.argv[1] == "load":
     avgss = json.load(open('data.txt'))
-    iters = 50
+    iters = 100
 
 start = time.time()
 skip = 0
@@ -74,7 +75,11 @@ def getVideo(html_doc, name):
 
 
 def clip(streamerid):
+    global chats
     print("clipping")
+
+    with open('%s%d.txt' % (streamers[streamerid], iters), 'w') as outfile:
+        json.dump(chats, outfile)
     #Switch screens from terminal to chrome
     time.sleep(1)
     keyboard.press(59) #ctrl
@@ -98,27 +103,38 @@ def clip(streamerid):
     keyboard.send(36)
 
     #Get Clip
-    time.sleep(7)
+    time.sleep(5)
+
     keyboard.press(58) #alt
     keyboard.press(7) #X
     keyboard.release(58)
     keyboard.release(7)
-    time.sleep(12) #there may be some lag in internet speed
-
-    #Write a title for clip
-    keyboard.write("%s%d" % (streamers[streamerid], iters))
-    keyboard.send(36) #enter
-
-    time.sleep(10)
+    time.sleep(15) #there may be some lag in internet speed
 
     #Save
     keyboard.press(55) #command
     keyboard.press(1) #S
     keyboard.release(55)
     keyboard.release(1)
-    keyboard.send(36)
+    time.sleep(0.5)
 
-    time.sleep(5)
+    #Write title for clip in finder
+    keyboard.write("%s%d" % (streamers[streamerid], iters))
+    keyboard.send(36) #enter
+    time.sleep(2)
+
+    #Close 2 tabs
+    keyboard.press(55) #command
+    keyboard.press(13) #W
+    keyboard.release(55) #command
+    keyboard.release(13) #W
+
+    time.sleep(1)
+
+    keyboard.press(55) #command
+    keyboard.press(13) #W
+    keyboard.release(55) #command
+    keyboard.release(13) #W
 
     f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], iters), 'r')
     text = f.read()
@@ -147,6 +163,7 @@ while True:
                     username = usernamesplit[0]
                     if MODT:
                         # print(username + ": " + message)
+                        chats.append(username + ": " + message)
                         counts[i] += 1;
                     for l in parts:
                         if "End of /NAMES list" in l:
@@ -163,12 +180,14 @@ while True:
             avg = sum(avgss[i]) / float(len(avgss[i]))
             print("streamer %s count: %d, avg: %d" % (streamers[i], counts[i], avg))
 
-            if iters > 10 and counts[i] > avg*1.5 and skip == 0:
+            if iters > 10 and counts[i] > avg*1.5 and skip <= 0:
                 clip(i)
+                avgss[i].append(counts[i]);
                 skip = 4
 
-            if skip == 0:
+            if skip < 2:
                 avgss[i].append(counts[i]);
+                chats = []
                 if(len(avgss[i]) > 10):
                     avgss[i].pop()
             else:
