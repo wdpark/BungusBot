@@ -99,12 +99,13 @@ new Twitch.Embed("twitch-embed", {
     <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
-</tr>
-<tr>
-    <td>  <br><font color="white>"><span id="s1"></span></font> </td>
+  </tr>
+  <tr>
+    <td>  <div id="p1"></div> <br><font color="white>"><span id="s1"></span></font> </td>
     <td>  <br><font color="white>"><span id="s2"></span></font> </td>
     <td>  <br><font color="white>"><span id="s3"></span></font> </td>
     <td>  <br><font color="white>"><span id="s4"></span></font> </td>
+  </tr>
 </table>
 
 </body>
@@ -176,4 +177,13 @@ ws.onmessage = function (evt) {
     $("#s3").html(obj[2])
     $("#s4").html(obj[3])
 };
+
+var trace = {
+  x: list(range(len(obj[0])+1),
+  y: obj[0],
+  type: 'scatter'
+};
+var data = [trace];
+Plotly.newPlot('p1', data);
+
 </script>
