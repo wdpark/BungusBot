@@ -13,7 +13,7 @@ from time import sleep
 @route('/')
 def send_static2():
     # return ("?")
-    return static_file("main2.html", root='web/')
+    return static_file("main.html", root='web/')
 
 @route('/<filename:path>')
 def send_static(filename):

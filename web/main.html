@@ -11,15 +11,37 @@
   <style>
   body {background-color: #380060}
 
-  #wrapper {
-  position: absolute;
-  width: 350px;
-  height: 100px;
-  left: 8%
 
-button {
-  height: 50px;
-  width: 200px;
+  table {
+    top: 50px;
+    width: 100%;
+    margin-top: 100px;
+ }
+
+
+
+  #wrapper {
+    top: 50px;
+  }
+
+  button {
+    position:relative;
+    top:0%;
+    left:0%;
+    bottom:58px;
+    font-weight: bold;
+    font-size: 1.2em
+    margin-top:50px;
+    margin-bottom:2em;
+    width: 100px;
+    background-color: #380060;
+    color: White;
+/*  padding: 8px 12px;
+    margin: 8px 620px;*/
+    border: 2px;
+    border-style: solid;
+    border-color: White
+    border-radius: 2px;
 }
 
   </style>
@@ -71,20 +93,25 @@ new Twitch.Embed("twitch-embed", {
 });
 </script>
 
-<table style="width:100%">
+<table>
   <tr>
-    <td align="center"><div id="wrapper"><button type="button" id="streamer1">clipperino</button></div>
-    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
-    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
-    <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
+    <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
 </tr>
+<tr>
+    <td>  <br><font color="white>"><span id="s1"></span></font> </td>
+    <td>  <br><font color="white>"><span id="s2"></span></font> </td>
+    <td>  <br><font color="white>"><span id="s3"></span></font> </td>
+    <td>  <br><font color="white>"><span id="s4"></span></font> </td>
 </table>
 
 </body>
 </html>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.0/jquery.js"></script>
-<script>
+<script type="text/javascript">
 $("#streamer1").click(function(){
     $.ajax({
         url: '/clip1',
@@ -97,11 +124,56 @@ $("#streamer1").click(function(){
     });
 });
 
+$("#streamer2").click(function(){
+    $.ajax({
+        url: '/clip2',
+        data: "nothing",
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(result){
+        }
+    });
+});
+
+
+$("#streamer3").click(function(){
+    $.ajax({
+        url: '/clip3',
+        data: "nothing",
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(result){
+        }
+    });
+});
+
+
+$("#streamer4").click(function(){
+    $.ajax({
+        url: '/clip4',
+        data: "nothing",
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(result){
+        }
+    });
+});
+
+
+console.log("websocket");
 var ws = new WebSocket("ws://localhost:8080/websocket");
 ws.onopen = function() {
     // ws.send("Hello, world");
 };
 ws.onmessage = function (evt) {
-    console.log(evt.data);
+    obj = JSON.parse(evt.data);
+    console.log(obj)
+    $("#s1").html(obj[0])
+    $("#s2").html(obj[1])
+    $("#s3").html(obj[2])
+    $("#s4").html(obj[3])
 };
 </script>
