@@ -2,18 +2,22 @@ import socket, string
 import time
 import keyboard
 from bs4 import BeautifulSoup
-import urllib
+import urllib.request
 import codecs
 import json
 import sys
-from bottle import route, run, template, static_file, get, post, request, BaseRequest
+from bottle import route, run, template, static_file, get, post, request, BaseRequest, Bottle, abort
 from threading import Thread
 from time import sleep
 
 @route('/')
-def send_static():
+def send_static2():
     # return ("?")
-    return static_file("main.html", root='web/')
+    return static_file("main2.html", root='web/')
+
+@route('/<filename:path>')
+def send_static(filename):
+    return static_file(filename, root='web/')
 
 @route('/clip1', method='POST')
 def do_uploadc():
@@ -37,20 +41,58 @@ PASS = "oauth:yoq3z1p3t3kt4pz1cl4n5nil3zq72a"
 readbuffers = []
 MODT = False
 
-# streamers = ["riotgames", "imaqtpie", "moonmoon_ow"]
-streamers = ["riotgames"]
+streamers = ["a_seagull", "nl_kripp", "riotgames", "tsm_theoddone"]
+# streamers = ["riotgames"]
 
 sockets = []
 counts = []
 avgss = []
 chats = []
+
+test = 0
+
+app = Bottle()
+
+@app.route('/websocket')
+def handle_websocket():
+    wsock = request.environ.get('wsgi.websocket')
+    if not wsock:
+        abort(400, 'Expected WebSocket request.')
+
+    while True:
+        time.sleep(0.5)
+        wsock.send(json.dumps(avgss))
+        # try:
+        #     message = wsock.receive()
+        #     wsock.send("Your message was: %r" % message)
+        # except WebSocketError:
+        #     break
+
+
+from gevent.pywsgi import WSGIServer
+from geventwebsocket import WebSocketError
+from geventwebsocket.handler import WebSocketHandler
+
+def threadfunc2():
+    server = WSGIServer(("0.0.0.0", 8080), app,
+                        handler_class=WebSocketHandler)
+    server.serve_forever()
+
+thread = Thread(target = threadfunc2)
+thread.daemon = True
+thread.start()
+print("threading worked")
+
+
+
+
 for i in range(len(streamers)):
     # Connecting to Twitch IRC by passing credentials and joining a certain channel
     s = socket.socket()
     s.connect((HOST, PORT))
-    s.send("PASS " + PASS + "\r\n")
-    s.send("NICK " + NICK + "\r\n")
-    s.send("JOIN #%s \r\n" % streamers[i])
+    s.send(("PASS " + PASS + "\r\n").encode())
+    s.send(("NICK " + NICK + "\r\n").encode())
+    s.send(("JOIN #%s \r\n" % streamers[i]).encode())
     sockets.append(s);
     counts.append(0);
     avgss.append([]);
@@ -69,16 +111,17 @@ skip = 0
 def getVideo(html_doc, name):
     soup = BeautifulSoup(html_doc, 'html.parser')
     video_link = soup.video['src'][:-4]
-    test=urllib.FancyURLopener()
+    test=urllib.request.FancyURLopener()
     test.retrieve(video_link,name+".mp4")
-
 
 
 def clip(streamerid):
     global chats
     print("clipping")
 
-    with open('%s%d.txt' % (streamers[streamerid], iters), 'w') as outfile:
+    theiters = iters
+
+    with open('%s%d.txt' % (streamers[streamerid], theiters), 'w') as outfile:
         json.dump(chats, outfile)
     #Switch screens from terminal to chrome
     time.sleep(1)
@@ -119,7 +162,7 @@ def clip(streamerid):
     time.sleep(0.5)
 
     #Write title for clip in finder
-    keyboard.write("%s%d" % (streamers[streamerid], iters))
+    keyboard.write("%s%d" % (streamers[streamerid], theiters))
     keyboard.send(36) #enter
     time.sleep(2)
 
@@ -136,30 +179,31 @@ def clip(streamerid):
     keyboard.release(55) #command
     keyboard.release(13) #W
 
-    f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], iters), 'r')
+    f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], theiters), 'r')
     text = f.read()
-    getVideo(text, "%s%d" % (streamers[streamerid], iters))
+    getVideo(text, "%s%d" % (streamers[streamerid], theiters))
     print("download a clip!!!!!!")
     skip = 2
     pass
 
 while True:
+    test += 1
     for i in range(len(streamers)):
-        readbuffers[i] = readbuffers[i] + sockets[i].recv(1024)
-        temp = string.split(readbuffers[i], "\n")
+        readbuffers[i] = readbuffers[i] + sockets[i].recv(1024).decode('utf-8')
+        temp = str.split(readbuffers[i], "\n")
         readbuffers[i] = temp.pop()
 
         for line in temp:
             if (line[0] == "PING"):
                 sockets[i].send("PONG %s\r\n" % line[1])
             else:
-                parts = string.split(line, ":")
+                parts = str.split(line, ":")
                 if "QUIT" not in parts[1] and "JOIN" not in parts[1] and "PART" not in parts[1]:
                     try:
                         message = parts[2][:len(parts[2]) - 1]
                     except:
                         message = ""
-                    usernamesplit = string.split(parts[1], "!")
+                    usernamesplit = str.split(parts[1], "!")
                     username = usernamesplit[0]
                     if MODT:
                         # print(username + ": " + message)

@@ -31,52 +31,20 @@ button {
 <body>
   <div style="margin: left"><img src="bungusbotpicture.png" width="200" height="100"> </div>
 
-  <div id="twitch-embed"></div>
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-<script type="text/javascript">
-  new Twitch.Embed("twitch-embed", {
-    width: .24*window.screen.width,
-    height: 500,
-    channel: "imaqtpie"
-  });
-</script>
-
-<div id="twitch-embed"></div>
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-<script type="text/javascript">
-new Twitch.Embed("twitch-embed", {
-  width: .24*window.screen.width,
-  height: 500,
-  channel: "riotgames"
-});
-</script>
-
-<div id="twitch-embed"></div>
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-<script type="text/javascript">
-new Twitch.Embed("twitch-embed", {
-  width: .24*window.screen.width,
-  height: 500,
-  channel: "disguisedtoasths"
-});
-</script>
-
-<div id="twitch-embed"></div>
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-<script type="text/javascript">
-new Twitch.Embed("twitch-embed", {
-  width: .24*window.screen.width,
-  height: 500,
-  channel: "overwatchleague"
-});
-</script>
-
 <table style="width:100%">
   <tr>
     <td align="center"><div id="wrapper"><button type="button" id="streamer1">clipperino</button></div>
+        <br><font color="white>"><span id="s1"></span></font>
+    </td>
     <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+        <br><font color="white>"><span id="s2"></span></font>
+    </td>
     <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+        <br><font color="white>"><span id="s3"></span></font>
+    </td>
     <td align="center"><div id="wrapper"><button type="button">clipperino</button></div>
+        <br><font color="white>"><span id="s4"></span></font>
+    </td>
 </tr>
 </table>
 
@@ -97,11 +65,17 @@ $("#streamer1").click(function(){
     });
 });
 
+console.log("websocket");
 var ws = new WebSocket("ws://localhost:8080/websocket");
 ws.onopen = function() {
     // ws.send("Hello, world");
 };
 ws.onmessage = function (evt) {
-    console.log(evt.data);
+    obj = JSON.parse(evt.data);
+    console.log(obj)
+    $("#s1").html(obj[0])
+    $("#s2").html(obj[1])
+    $("#s3").html(obj[2])
+    $("#s4").html(obj[3])
 };
 </script>
