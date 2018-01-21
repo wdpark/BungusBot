@@ -44,6 +44,7 @@
     margin-top:50px;
     margin-bottom:2em;
     width: 100px;
+    height: 30px;
     background-color: #380060;
     color: White;
 /*  padding: 8px 12px;
@@ -52,9 +53,26 @@
     border-style: solid;
     border-color: White
     border-radius: 2px;
-}
+    -o-transition:color .1s ease-out, background .2s ease-in;
+    -ms-transition:color .1s ease-out, background .2s ease-in;
+    -moz-transition:color .1s ease-out, background .2s ease-in;
+    -webkit-transition:color .1s ease-out, background .2s ease-in;
+    transition:color .1s ease-out, background .2s ease-in;
+  }
 
-  </style>
+  button:hover{
+    border-color: #380060;
+    color: #380060;
+    background-color: White;
+  }
+
+  button:focus{
+    border-color: #380060;
+    color: #380060;
+    background-color: #00619b;
+  }
+
+</style>
 
 
 
@@ -110,12 +128,6 @@
 
 <table>
   <tr>
-<<<<<<< HEAD
-    <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>
-    <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>
-    <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>
-    <td align="center"><div id="wrapper"><button type="button" class="button">clipperino</button></div></td>  
-=======
     <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
     <td align="center"><div id="wrapper"><button type="button" id="streamer1" class="button">clipperino</button></div></td>
@@ -126,7 +138,6 @@
     <td>  <br><font color="white>"><span id="s2"></span></font> </td>
     <td>  <br><font color="white>"><span id="s3"></span></font> </td>
     <td>  <br><font color="white>"><span id="s4"></span></font> </td>
->>>>>>> 8435ac52aa56e9b61ff1d4687bde4211c549bbcd
   </tr>
 </table>
 
@@ -146,9 +157,8 @@ $("#streamer1").click(function(){
         }
     });
 });
-<<<<<<< HEAD
-</script>
-=======
+
+
 
 $("#streamer2").click(function(){
     $.ajax({
@@ -212,4 +222,3 @@ var data = [trace];
 Plotly.newPlot('p1', data);
 
 </script>
->>>>>>> 8435ac52aa56e9b61ff1d4687bde4211c549bbcd
