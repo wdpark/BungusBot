@@ -124,60 +124,66 @@ def clip(streamerid):
     with open('%s%d.txt' % (streamers[streamerid], theiters), 'w') as outfile:
         json.dump(chats, outfile)
     #Switch screens from terminal to chrome
-    time.sleep(1)
-    keyboard.press(59) #ctrl
-    keyboard.press(19) #2
-    keyboard.release(59)
-    keyboard.release(19)
-
-    time.sleep(2)
-
-    #Open new chrome tab
-    keyboard.press(55) #command
-    keyboard.press(45) #N
-    keyboard.release(55) #command
-    keyboard.release(45) #N
-
-    time.sleep(2)
-
-    #Type streamer URL into chrome search bar
-    keyboard.write('twitch.tv/riotgames')
-    time.sleep(0.5)
-    keyboard.send(36)
-
-    #Get Clip
-    time.sleep(5)
-
-    keyboard.press(58) #alt
-    keyboard.press(7) #X
-    keyboard.release(58)
-    keyboard.release(7)
-    time.sleep(15) #there may be some lag in internet speed
-
-    #Save
-    keyboard.press(55) #command
-    keyboard.press(1) #S
-    keyboard.release(55)
-    keyboard.release(1)
-    time.sleep(0.5)
+    # time.sleep(1)
+    # keyboard.press(59) #ctrl
+    # keyboard.press(19) #2
+    # keyboard.release(59)
+    # keyboard.release(19)
+    #
+    # time.sleep(2)
+    #
+    # #Open new chrome tab
+    # keyboard.press(55) #command
+    # keyboard.press(45) #N
+    # keyboard.release(55) #command
+    # keyboard.release(45) #N
+    #
+    # time.sleep(2)
+    #
+    # #Type streamer URL into chrome search bar
+    # keyboard.write('twitch.tv/riotgames')
+    # time.sleep(0.5)
+    # keyboard.send(36)
+    #
+    # #Get Clip
+    # time.sleep(5)
+    #
+    # keyboard.press(58) #alt
+    # keyboard.press(7) #X
+    # keyboard.release(58)
+    # keyboard.release(7)
+    # time.sleep(15) #there may be some lag in internet speed
+    #
+    # #Save
+    # keyboard.press(55) #command
+    # keyboard.press(1) #S
+    # keyboard.release(55)
+    # keyboard.release(1)
+    # time.sleep(0.5)
 
     #Write title for clip in finder
-    keyboard.write("%s%d" % (streamers[streamerid], theiters))
-    keyboard.send(36) #enter
-    time.sleep(2)
+    # keyboard.write("%s%d" % (streamers[streamerid], theiters))
+    # keyboard.send(36) #enter
+    # time.sleep(2)
+    #
+    # #Close 2 tabs
+    # keyboard.press(55) #command
+    # keyboard.press(13) #W
+    # keyboard.release(55) #command
+    # keyboard.release(13) #W
+    #
+    # time.sleep(1)
+    #
+    # keyboard.press(55) #command
+    # keyboard.press(13) #W
+    # keyboard.release(55) #command
+    # keyboard.release(13) #W
+    url = "twitch.tv/riotgames"
+    https://clips.twitch.tv/clips
 
-    #Close 2 tabs
-    keyboard.press(55) #command
-    keyboard.press(13) #W
-    keyboard.release(55) #command
-    keyboard.release(13) #W
+    post = "js-create-clip-form"
+    button_class = "pl-clips-button"
 
-    time.sleep(1)
-
-    keyboard.press(55) #command
-    keyboard.press(13) #W
-    keyboard.release(55) #command
-    keyboard.release(13) #W
 
     f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], theiters), 'r')
     text = f.read()
