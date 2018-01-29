@@ -1,11 +1,20 @@
+import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 
-my_username = "volatil3_"
-my_password = "thisispassword"
+my_username = "bungusbot"
+my_password = "monkabot"
 
 driver = webdriver.Chrome()
+driver.get("http://www.twitch.tv/user/login")
+elem_user = driver.find_element_by_id("username")
+elem_passwd = driver.find_element_by_name("password")
+elem_user.send_keys(my_username)
+elem_passwd.send_keys(my_password + Keys.RETURN)
+
+time.sleep(5)
+
 driver.get("https://twitch.tv/lilypichu")
 
 mature_menu = driver.find_element_by_css_selector(".pl-mature-overlay")
