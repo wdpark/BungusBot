@@ -9,6 +9,10 @@ import sys
 from bottle import route, run, template, static_file, get, post, request, BaseRequest, Bottle, abort
 from threading import Thread
 from time import sleep
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import ActionChains
+
 
 @route('/')
 def send_static2():
@@ -115,6 +119,35 @@ def getVideo(html_doc, name):
     test.retrieve(video_link,name+".mp4")
 
 
+def login(driver, username, password):
+    driver.get("http://www.twitch.tv/user/login")
+    elem_user = driver.find_element_by_id("username")
+    elem_passwd = driver.find_element_by_name("password")
+    elem_user.send_keys(username)
+    elem_passwd.send_keys(password + Keys.RETURN)
+    time.sleep(5)
+
+def getClip(driver, link):
+    driver.get(link)
+
+    mature_menu = driver.find_element_by_css_selector(".pl-mature-overlay")
+    mature_accept = driver.find_element_by_css_selector(".player-content-button")
+    ActionChains(driver).move_to_element(mature_menu).click(mature_accept).perform()
+
+    menu = driver.find_element_by_css_selector(".player-menu")
+    hidden_submenu = driver.find_element_by_css_selector(".pl-clips-button")
+    ActionChains(driver).move_to_element(menu).click(hidden_submenu).perform()
+
+    html = driver.page_source
+    soup = BeautifulSoup(html, "html5lib")
+    form = soup.find("form", {"class" : "js-create-clip-form"})
+    broadcast_ID = soup.find("input", {"class" : "js-create-clip-broadcast_id"})['value']
+    offset_time = soup.find("input", {"class" : "js-create-clip-offset"})['value']
+
+    clip_url = "https://clips-media-assets.twitch.tv/raw_media/" + broadcast_ID + "-offset-" + offset_time + ".mp4"
+    print (clip_url)
+    urllib.request.urlretrieve(clip_url, 'same.mp4')
+
 def clip(streamerid):
     global chats
     print("clipping")
@@ -178,8 +211,15 @@ def clip(streamerid):
     # keyboard.press(13) #W
     # keyboard.release(55) #command
     # keyboard.release(13) #W
+    username = "bungusbot2"
+    password = "monkabot"
     url = "twitch.tv/riotgames"
-    https://clips.twitch.tv/clips
+
+    driver = webdriver.Chrome()
+    login(driver, username, password)
+    getClip(driver, url)
+
+    # https://clips.twitch.tv/clips
 
     post = "js-create-clip-form"
     button_class = "pl-clips-button"
