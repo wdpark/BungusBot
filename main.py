@@ -112,9 +112,9 @@ if sys.argv[1] == "load":
 start = time.time()
 skip = 0
 
-def getVideo(html_doc, name):
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    video_link = soup.video['src'][:-4]
+def getVideo(video_link, name):
+    # soup = BeautifulSoup(html_doc, 'html.parser')
+    # video_link = soup.video['src'][:-4]
     test=urllib.request.FancyURLopener()
     test.retrieve(video_link,name+".mp4")
 
@@ -127,7 +127,9 @@ def login(driver, username, password):
     elem_passwd.send_keys(password + Keys.RETURN)
     time.sleep(5)
 
-def getClip(driver, link):
+def getClip(driver, channel_name,theiters):
+    link = "twitch.tv/" + channel_name
+
     driver.get(link)
 
     mature_menu = driver.find_element_by_css_selector(".pl-mature-overlay")
@@ -145,8 +147,8 @@ def getClip(driver, link):
     offset_time = soup.find("input", {"class" : "js-create-clip-offset"})['value']
 
     clip_url = "https://clips-media-assets.twitch.tv/raw_media/" + broadcast_ID + "-offset-" + offset_time + ".mp4"
-    print (clip_url)
-    urllib.request.urlretrieve(clip_url, 'same.mp4')
+    return clip_url
+
 
 def clip(streamerid):
     global chats
@@ -156,78 +158,22 @@ def clip(streamerid):
 
     with open('%s%d.txt' % (streamers[streamerid], theiters), 'w') as outfile:
         json.dump(chats, outfile)
-    #Switch screens from terminal to chrome
-    # time.sleep(1)
-    # keyboard.press(59) #ctrl
-    # keyboard.press(19) #2
-    # keyboard.release(59)
-    # keyboard.release(19)
-    #
-    # time.sleep(2)
-    #
-    # #Open new chrome tab
-    # keyboard.press(55) #command
-    # keyboard.press(45) #N
-    # keyboard.release(55) #command
-    # keyboard.release(45) #N
-    #
-    # time.sleep(2)
-    #
-    # #Type streamer URL into chrome search bar
-    # keyboard.write('twitch.tv/riotgames')
-    # time.sleep(0.5)
-    # keyboard.send(36)
-    #
-    # #Get Clip
-    # time.sleep(5)
-    #
-    # keyboard.press(58) #alt
-    # keyboard.press(7) #X
-    # keyboard.release(58)
-    # keyboard.release(7)
-    # time.sleep(15) #there may be some lag in internet speed
-    #
-    # #Save
-    # keyboard.press(55) #command
-    # keyboard.press(1) #S
-    # keyboard.release(55)
-    # keyboard.release(1)
-    # time.sleep(0.5)
 
-    #Write title for clip in finder
-    # keyboard.write("%s%d" % (streamers[streamerid], theiters))
-    # keyboard.send(36) #enter
-    # time.sleep(2)
-    #
-    # #Close 2 tabs
-    # keyboard.press(55) #command
-    # keyboard.press(13) #W
-    # keyboard.release(55) #command
-    # keyboard.release(13) #W
-    #
-    # time.sleep(1)
-    #
-    # keyboard.press(55) #command
-    # keyboard.press(13) #W
-    # keyboard.release(55) #command
-    # keyboard.release(13) #W
     username = "bungusbot2"
     password = "monkabot"
-    url = "twitch.tv/riotgames"
+    channel_name = streamers[streamerid]
 
     driver = webdriver.Chrome()
     login(driver, username, password)
-    getClip(driver, url)
-
-    # https://clips.twitch.tv/clips
+    clip_url = getClip(driver, channel_name,theiters)
 
     post = "js-create-clip-form"
     button_class = "pl-clips-button"
 
+    # f=codecs.open(mov_path, 'r')
+    # text = f.read()
+    getVideo(clip_url, "%s%d" % (streamers[streamerid], theiters))
 
-    f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], theiters), 'r')
-    text = f.read()
-    getVideo(text, "%s%d" % (streamers[streamerid], theiters))
     print("download a clip!!!!!!")
     skip = 2
     pass
