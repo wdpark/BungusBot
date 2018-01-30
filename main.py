@@ -25,6 +25,25 @@ def do_uploadc():
     clip(0)
     return "hehexd"
 
+@route('/clip2', method='POST')
+def do_uploadc():
+    print("make the clip u booster")
+    clip(1)
+    return "hehexd"
+
+@route('/clip3', method='POST')
+def do_uploadc():
+    print("make the clip u booster")
+    clip(2)
+    return "hehexd"
+
+@route('/clip4', method='POST')
+def do_uploadc():
+    print("make the clip u booster")
+    clip(3)
+    return "hehexd"
+
+
 def threadfunc():
     run(host="0.0.0.0", port=8000)
 
@@ -41,13 +60,14 @@ PASS = "oauth:yoq3z1p3t3kt4pz1cl4n5nil3zq72a"
 readbuffers = []
 MODT = False
 
-streamers = ["a_seagull", "nl_kripp", "riotgames", "tsm_theoddone"]
-# streamers = ["riotgames"]
+# streamers = ["overwatchleague", "nl_kripp", "riotgames", "eleaguetv"]
+streamers = ["playhearthstone", "aimbotcalvin", "imaqtpie", "iwilldominate"]
 
 sockets = []
 counts = []
 avgss = []
 chats = []
+skiptime = False
 
 test = 0
 
@@ -103,7 +123,7 @@ iters = 0
 
 if sys.argv[1] == "load":
     avgss = json.load(open('data.txt'))
-    iters = 100
+    iters = int(sys.argv[2])
 
 start = time.time()
 skip = 0
@@ -117,9 +137,11 @@ def getVideo(html_doc, name):
 
 def clip(streamerid):
     global chats
+    global skiptime
     print("clipping")
 
     theiters = iters
+    skiptime = True
 
     with open('%s%d.txt' % (streamers[streamerid], theiters), 'w') as outfile:
         json.dump(chats, outfile)
@@ -141,12 +163,12 @@ def clip(streamerid):
     time.sleep(2)
 
     #Type streamer URL into chrome search bar
-    keyboard.write('twitch.tv/riotgames')
+    keyboard.write('twitch.tv/%s' % streamers[streamerid])
     time.sleep(0.5)
     keyboard.send(36)
 
     #Get Clip
-    time.sleep(5)
+    time.sleep(15)
 
     keyboard.press(58) #alt
     keyboard.press(7) #X
@@ -174,21 +196,23 @@ def clip(streamerid):
 
     time.sleep(1)
 
-    keyboard.press(55) #command
-    keyboard.press(13) #W
-    keyboard.release(55) #command
-    keyboard.release(13) #W
+    # keyboard.press(55) #command
+    # keyboard.press(13) #W
+    # keyboard.release(55) #command
+    # keyboard.release(13) #W
 
     f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], theiters), 'r')
     text = f.read()
     getVideo(text, "%s%d" % (streamers[streamerid], theiters))
     print("download a clip!!!!!!")
     skip = 2
-    pass
+    skiptime = False
 
 while True:
     test += 1
+    # time.sleep(500)
     for i in range(len(streamers)):
+        print("waiting for %s" % (streamers[i]))
         readbuffers[i] = readbuffers[i] + sockets[i].recv(1024).decode('utf-8')
         temp = str.split(readbuffers[i], "\n")
         readbuffers[i] = temp.pop()
@@ -206,7 +230,7 @@ while True:
                     usernamesplit = str.split(parts[1], "!")
                     username = usernamesplit[0]
                     if MODT:
-                        # print(username + ": " + message)
+                        print(username + ": " + message)
                         chats.append(username + ": " + message)
                         counts[i] += 1;
                     for l in parts:
@@ -224,7 +248,7 @@ while True:
             avg = sum(avgss[i]) / float(len(avgss[i]))
             print("streamer %s count: %d, avg: %d" % (streamers[i], counts[i], avg))
 
-            if iters > 10 and counts[i] > avg*1.5 and skip <= 0:
+            if iters > 10 and counts[i] > avg*1.5 and skip <= 0 and not skiptime:
                 clip(i)
                 avgss[i].append(counts[i]);
                 skip = 4
@@ -233,7 +257,7 @@ while True:
                 avgss[i].append(counts[i]);
                 chats = []
                 if(len(avgss[i]) > 10):
-                    avgss[i].pop()
+                    avgss[i].pop(0)
             else:
                 print("(skipperino)")
                 skip -= 1;
