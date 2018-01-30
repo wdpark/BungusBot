@@ -29,10 +29,8 @@ ActionChains(driver).move_to_element(menu).click(hidden_submenu).perform()
 html = driver.page_source
 soup = BeautifulSoup(html, "html5lib")
 form = soup.find("form", {"class" : "js-create-clip-form"})
-print (form)
-broadcast_ID = soup.find("input", {"class" : "js-create-clip-broadcast_id"})
-print (broadcast_ID)
-offset_time = soup.find("input", {"class" : "js-create-clip-offset"})
-print (offset_time)
+broadcast_ID = soup.find("input", {"class" : "js-create-clip-broadcast_id"})['value']
+offset_time = soup.find("input", {"class" : "js-create-clip-offset"})['value']
 
 clip_url = "https://clips-media-assets.twitch.tv/raw_media/" + broadcast_ID + "-offset-" + offset_time + ".mp4#t=60"
+print(clip_url)
