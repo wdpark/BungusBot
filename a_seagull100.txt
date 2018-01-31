@@ -1,1 +1,0 @@
-["bungusbot.tmi.twitch.tv 353 bungusbot = #nl_kripp : bungusbot", "bungusbot.tmi.twitch.tv 366 bungusbot #nl_kripp : End of /NAMES list", "bungusbot.tmi.twitch.tv 353 bungusbot = #riotgames : bungusbot", "bungusbot.tmi.twitch.tv 366 bungusbot #riotgames : End of /NAMES list", "uncleswagg: Velocinator k3llyWink"]

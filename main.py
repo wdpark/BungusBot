@@ -9,6 +9,9 @@ import sys
 from bottle import route, run, template, static_file, get, post, request, BaseRequest, Bottle, abort
 from threading import Thread
 from time import sleep
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import ActionChains
 
 @route('/')
 def send_static2():
@@ -22,25 +25,25 @@ def send_static(filename):
 @route('/clip1', method='POST')
 def do_uploadc():
     print("make the clip u booster")
-    clip(0)
+    clip(driver, 0)
     return "hehexd"
 
 @route('/clip2', method='POST')
 def do_uploadc():
     print("make the clip u booster")
-    clip(1)
+    clip(driver, 1)
     return "hehexd"
 
 @route('/clip3', method='POST')
 def do_uploadc():
     print("make the clip u booster")
-    clip(2)
+    clip(driver, 2)
     return "hehexd"
 
 @route('/clip4', method='POST')
 def do_uploadc():
     print("make the clip u booster")
-    clip(3)
+    clip(driver, 3)
     return "hehexd"
 
 
@@ -60,8 +63,9 @@ PASS = "oauth:yoq3z1p3t3kt4pz1cl4n5nil3zq72a"
 readbuffers = []
 MODT = False
 
+streamers=["disguisedtoasths"]
 # streamers = ["overwatchleague", "nl_kripp", "riotgames", "eleaguetv"]
-streamers = ["playhearthstone", "aimbotcalvin", "imaqtpie", "iwilldominate"]
+# streamers = ["playhearthstone", "aimbotcalvin", "imaqtpie", "iwilldominate"]
 
 sockets = []
 counts = []
@@ -118,6 +122,7 @@ for i in range(len(streamers)):
     avgss.append([]);
     avgss[i].append(1);
     readbuffers.append("");
+    print (avgss)
 
 iters = 0
 
@@ -128,14 +133,46 @@ if sys.argv[1] == "load":
 start = time.time()
 skip = 0
 
-def getVideo(html_doc, name):
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    video_link = soup.video['src'][:-4]
+def getVideo(video_link, name):
+    # soup = BeautifulSoup(html_doc, 'html.parser')
+    # video_link = soup.video['src'][:-4]
     test=urllib.request.FancyURLopener()
     test.retrieve(video_link,name+".mp4")
 
 
-def clip(streamerid):
+def login(driver, username, password):
+    driver.get("http://www.twitch.tv/user/login")
+    elem_user = driver.find_element_by_id("username")
+    elem_passwd = driver.find_element_by_name("password")
+    elem_user.send_keys(username)
+    elem_passwd.send_keys(password + Keys.RETURN)
+    time.sleep(5)
+
+def getClip(driver, channel_name, theiters):
+    link = "https://twitch.tv/" + channel_name
+    print (link)
+    driver.get(link)
+
+    # if(mature):
+    #     mature_menu = driver.find_element_by_css_selector(".pl-mature-overlay")
+    #     mature_accept = driver.find_element_by_css_selector(".player-content-button")
+    #     ActionChains(driver).move_to_element(mature_menu).click(mature_accept).perform()
+
+    menu = driver.find_element_by_css_selector(".player-menu")
+    hidden_submenu = driver.find_element_by_css_selector(".pl-clips-button")
+    ActionChains(driver).move_to_element(menu).click(hidden_submenu).perform()
+
+    html = driver.page_source
+    soup = BeautifulSoup(html, "html5lib")
+    form = soup.find("form", {"class" : "js-create-clip-form"})
+    broadcast_ID = soup.find("input", {"class" : "js-create-clip-broadcast_id"})['value']
+    offset_time = soup.find("input", {"class" : "js-create-clip-offset"})['value']
+
+    clip_url = "https://clips-media-assets.twitch.tv/raw_media/" + broadcast_ID + "-offset-" + offset_time + ".mp4"
+    return clip_url
+
+
+def clip(driver, streamerid):
     global chats
     global skiptime
     print("clipping")
@@ -145,68 +182,27 @@ def clip(streamerid):
 
     with open('%s%d.txt' % (streamers[streamerid], theiters), 'w') as outfile:
         json.dump(chats, outfile)
-    #Switch screens from terminal to chrome
-    time.sleep(1)
-    keyboard.press(59) #ctrl
-    keyboard.press(19) #2
-    keyboard.release(59)
-    keyboard.release(19)
 
-    time.sleep(2)
+    channel_name = streamers[streamerid]
+    clip_url = getClip(driver, channel_name,theiters)
 
-    #Open new chrome tab
-    keyboard.press(55) #command
-    keyboard.press(45) #N
-    keyboard.release(55) #command
-    keyboard.release(45) #N
+    # f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], theiters), 'r')
+    # text = f.read()
+    getVideo(clip_url, "%s%d" % (streamers[streamerid], theiters))
 
-    time.sleep(2)
-
-    #Type streamer URL into chrome search bar
-    keyboard.write('twitch.tv/%s' % streamers[streamerid])
-    time.sleep(0.5)
-    keyboard.send(36)
-
-    #Get Clip
-    time.sleep(15)
-
-    keyboard.press(58) #alt
-    keyboard.press(7) #X
-    keyboard.release(58)
-    keyboard.release(7)
-    time.sleep(15) #there may be some lag in internet speed
-
-    #Save
-    keyboard.press(55) #command
-    keyboard.press(1) #S
-    keyboard.release(55)
-    keyboard.release(1)
-    time.sleep(0.5)
-
-    #Write title for clip in finder
-    keyboard.write("%s%d" % (streamers[streamerid], theiters))
-    keyboard.send(36) #enter
-    time.sleep(2)
-
-    #Close 2 tabs
-    keyboard.press(55) #command
-    keyboard.press(13) #W
-    keyboard.release(55) #command
-    keyboard.release(13) #W
-
-    time.sleep(1)
-
-    # keyboard.press(55) #command
-    # keyboard.press(13) #W
-    # keyboard.release(55) #command
-    # keyboard.release(13) #W
-
-    f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], theiters), 'r')
-    text = f.read()
-    getVideo(text, "%s%d" % (streamers[streamerid], theiters))
     print("download a clip!!!!!!")
     skip = 2
     skiptime = False
+
+username = "bungusbot2"
+password = "monkabot"
+
+# driver = webdriver.Chrome()
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--no-sandbox')
+driver = webdriver.Chrome('/usr/local/bin/chromedriver', chrome_options=chrome_options)
+
+login(driver, username, password)
 
 while True:
     test += 1
@@ -249,7 +245,7 @@ while True:
             print("streamer %s count: %d, avg: %d" % (streamers[i], counts[i], avg))
 
             if iters > 10 and counts[i] > avg*1.5 and skip <= 0 and not skiptime:
-                clip(i)
+                clip(driver, i)
                 avgss[i].append(counts[i]);
                 skip = 4
 
