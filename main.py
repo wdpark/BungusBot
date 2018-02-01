@@ -12,6 +12,7 @@ from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
 
 @route('/')
 def send_static2():
@@ -63,7 +64,9 @@ PASS = "oauth:yoq3z1p3t3kt4pz1cl4n5nil3zq72a"
 readbuffers = []
 MODT = False
 
-streamers=["disguisedtoasths"]
+# streamers = ['loltyler1', 'imaqtpie', 'pimpimentalol', 'Shiphtur', 'Broeki1', 'gratis150ml', 'Theokoles']
+streamers = ['c9sneaky']
+# streamers=["disguisedtoasths"]
 # streamers = ["overwatchleague", "nl_kripp", "riotgames", "eleaguetv"]
 # streamers = ["playhearthstone", "aimbotcalvin", "imaqtpie", "iwilldominate"]
 
@@ -107,9 +110,6 @@ thread.daemon = True
 thread.start()
 print("threading worked")
 
-
-
-
 for i in range(len(streamers)):
     # Connecting to Twitch IRC by passing credentials and joining a certain channel
     s = socket.socket()
@@ -136,9 +136,10 @@ skip = 0
 def getVideo(video_link, name):
     # soup = BeautifulSoup(html_doc, 'html.parser')
     # video_link = soup.video['src'][:-4]
+    # test=urllib.request.FancyURLopener()
     test=urllib.request.FancyURLopener()
-    test.retrieve(video_link,name+".mp4")
-
+    print (video_link)
+    test.retrieve(video_link,name + ".mp4")
 
 def login(driver, username, password):
     driver.get("http://www.twitch.tv/user/login")
@@ -150,13 +151,14 @@ def login(driver, username, password):
 
 def getClip(driver, channel_name, theiters):
     link = "https://twitch.tv/" + channel_name
-    print (link)
     driver.get(link)
 
     # if(mature):
-    #     mature_menu = driver.find_element_by_css_selector(".pl-mature-overlay")
-    #     mature_accept = driver.find_element_by_css_selector(".player-content-button")
-    #     ActionChains(driver).move_to_element(mature_menu).click(mature_accept).perform()
+    # mature_menu = driver.find_element_by_css_selector(".pl-mature-overlay")
+    # mature_accept = driver.find_element_by_css_selector(".player-content-button")
+    # ActionChains(driver).move_to_element(mature_menu).click(mature_accept).perform()
+
+    time.sleep(3)
 
     menu = driver.find_element_by_css_selector(".player-menu")
     hidden_submenu = driver.find_element_by_css_selector(".pl-clips-button")
@@ -164,12 +166,47 @@ def getClip(driver, channel_name, theiters):
 
     html = driver.page_source
     soup = BeautifulSoup(html, "html5lib")
+
+    #post request stuff
+    url = 'https://clips.twitch.tv/clips'
+    time.sleep(3)
+
     form = soup.find("form", {"class" : "js-create-clip-form"})
     broadcast_ID = soup.find("input", {"class" : "js-create-clip-broadcast_id"})['value']
     offset_time = soup.find("input", {"class" : "js-create-clip-offset"})['value']
+    session_id = soup.find("input", {"class" : "js-create-clip-play_session_id"})['value']
+    vod_id = soup.find("input", {"class" : "js-create-clip-vod_id"})['value']
+# https://clips-media-assets.twitch.tv/raw_media/27460953072-offset-6122.mp4#t=60
 
-    clip_url = "https://clips-media-assets.twitch.tv/raw_media/" + broadcast_ID + "-offset-" + offset_time + ".mp4"
-    return clip_url
+    values = {'player_backend_type' : 'mediaplayer',
+          'channel' : channel_name,
+          'broadcast_id' : broadcast_ID,
+          'offset':offset_time,
+          'play_session_id': session_id,
+          'js-create-clip-vod_id' : vod_id}
+
+    headers={'User-Agent':' Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0'}
+    data = urllib.parse.urlencode(values)
+    data = data.encode('ascii')
+    WebDriverWait(driver, 10).until(lambda d: len(d.window_handles) == 2)
+
+    driver.switch_to_window(driver.window_handles[1])
+
+    req = urllib.request.Request(url, data=data, headers=headers)
+
+    WebDriverWait(driver, 10).until(lambda d: d.title != "")
+
+    driver.switch_to.active_element
+
+    WebDriverWait(driver, 3).until(lambda d: d.find_element_by_tag_name('video').get_attribute('src') != "")
+
+    video = driver.find_element_by_tag_name('video')
+    video_html = video.get_attribute('src')[:-4]
+
+    # print (driver.find_element_by_tag_name('video').get_attribute("currentSrc")[:-4])
+
+
+    return video_html
 
 
 def clip(driver, streamerid):
@@ -185,6 +222,7 @@ def clip(driver, streamerid):
 
     channel_name = streamers[streamerid]
     clip_url = getClip(driver, channel_name,theiters)
+    print (clip_url)
 
     # f=codecs.open("/Users/kevin/Downloads/%s%d.html" % (streamers[streamerid], theiters), 'r')
     # text = f.read()
@@ -194,7 +232,7 @@ def clip(driver, streamerid):
     skip = 2
     skiptime = False
 
-username = "bungusbot2"
+username = "derpherpderp151"
 password = "monkabot"
 
 # driver = webdriver.Chrome()
@@ -243,7 +281,7 @@ while True:
         for i in range(len(streamers)):
             avg = sum(avgss[i]) / float(len(avgss[i]))
             print("streamer %s count: %d, avg: %d" % (streamers[i], counts[i], avg))
-
+            time.sleep(5)
             if iters > 10 and counts[i] > avg*1.5 and skip <= 0 and not skiptime:
                 clip(driver, i)
                 avgss[i].append(counts[i]);
