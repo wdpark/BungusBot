@@ -49,7 +49,7 @@ def do_uploadc():
 
 
 def threadfunc():
-    run(host="0.0.0.0", port=8000)
+    run(host="0.0.0.0", port=8080+int(sys.argv[4]))
 
 thread = Thread(target = threadfunc)
 thread.daemon = True
@@ -63,9 +63,11 @@ PORT = 6667
 PASS = "oauth:yoq3z1p3t3kt4pz1cl4n5nil3zq72a"
 readbuffers = []
 MODT = False
+# ['imaqtpie', 'jovirone', 'Shiphtur', '亞洲統神', 'Corobizar', 'Solary', 'NoWay4u_Sir', 'Overpow', '한동숙']
 
 # streamers = ['loltyler1', 'imaqtpie', 'pimpimentalol', 'Shiphtur', 'Broeki1', 'gratis150ml', 'Theokoles']
-streamers = ['c9sneaky']
+streamers = [sys.argv[3]]
+
 # streamers=["disguisedtoasths"]
 # streamers = ["overwatchleague", "nl_kripp", "riotgames", "eleaguetv"]
 # streamers = ["playhearthstone", "aimbotcalvin", "imaqtpie", "iwilldominate"]
@@ -93,7 +95,7 @@ def handle_websocket():
         #     message = wsock.receive()
         #     wsock.send("Your message was: %r" % message)
         # except WebSocketError:
-        #     break
+        #     breaks
 
 
 from gevent.pywsgi import WSGIServer
@@ -101,7 +103,7 @@ from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
 def threadfunc2():
-    server = WSGIServer(("0.0.0.0", 8080), app,
+    server = WSGIServer(("0.0.0.0", 8000 + int(sys.argv[4])), app,
                         handler_class=WebSocketHandler)
     server.serve_forever()
 
@@ -141,22 +143,33 @@ def getVideo(video_link, name):
     print (video_link)
     test.retrieve(video_link,name + ".mp4")
 
-def login(driver, username, password):
-    driver.get("http://www.twitch.tv/user/login")
-    elem_user = driver.find_element_by_id("username")
-    elem_passwd = driver.find_element_by_name("password")
-    elem_user.send_keys(username)
-    elem_passwd.send_keys(password + Keys.RETURN)
+def facebook_login(driver, username, password):
+    driver.get("https://facebook.com")
+    fb_email = driver.find_element_by_id("email")
+    fb_pass = driver.find_element_by_id("pass")
+
+    fb_email.send_keys(username)
+    fb_pass.send_keys(password + Keys.RETURN)
     time.sleep(5)
+
+def twitch_login(driver, username, password):
+    driver.get("http://www.twitch.tv/user/login")
+    item = driver.find_element_by_class_name("item")
+    fb_button = driver.find_element_by_class_name("fb_button")
+    ActionChains(driver).move_to_element(item).click(fb_button).perform()
+
+
 
 def getClip(driver, channel_name, theiters):
     link = "https://twitch.tv/" + channel_name
     driver.get(link)
 
     # if(mature):
-    # mature_menu = driver.find_element_by_css_selector(".pl-mature-overlay")
-    # mature_accept = driver.find_element_by_css_selector(".player-content-button")
-    # ActionChains(driver).move_to_element(mature_menu).click(mature_accept).perform()
+    print (driver.find_elements_by_css_selector('.pl-mature-overlay'))
+    if(len(driver.find_elements_by_css_selector('.pl-mature-overlay')) != 0):
+        mature_menu = driver.find_element_by_css_selector(".pl-mature-overlay")
+        mature_accept = driver.find_element_by_css_selector(".player-content-button")
+        ActionChains(driver).move_to_element(mature_menu).click(mature_accept).perform()
 
     time.sleep(3)
 
@@ -232,21 +245,26 @@ def clip(driver, streamerid):
     skip = 2
     skiptime = False
 
-username = "derpherpderp151"
-password = "monkabot"
 
-# driver = webdriver.Chrome()
+facebook_email = "derpherpderp12789@gmail.com"
+facebook_password = "derpherpderp"
+twitch_username = "derpherpderp151"
+twitch_password = "monkabot"
+
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--no-sandbox')
 driver = webdriver.Chrome('/usr/local/bin/chromedriver', chrome_options=chrome_options)
+facebook_login(driver, facebook_email, facebook_password)
+twitch_login(driver, twitch_username, twitch_password)
 
-login(driver, username, password)
 
 while True:
     test += 1
     # time.sleep(500)
+
     for i in range(len(streamers)):
         print("waiting for %s" % (streamers[i]))
+
         readbuffers[i] = readbuffers[i] + sockets[i].recv(1024).decode('utf-8')
         temp = str.split(readbuffers[i], "\n")
         readbuffers[i] = temp.pop()
